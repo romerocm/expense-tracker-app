@@ -61,8 +61,8 @@ export function ExpenseForm({ onSuccess }: ExpenseFormProps) {
         throw new Error('Please enter a description');
       }
 
-      if (!store.addExpense) {
-        console.error('Store state when addExpense is undefined:', store);
+      if (!addExpense) {
+        console.error('addExpense function is not available');
         throw new Error('Add expense function is not available');
       }
 
@@ -73,7 +73,7 @@ export function ExpenseForm({ onSuccess }: ExpenseFormProps) {
         note: note.trim() || undefined,
       };
 
-      await store.addExpense(expenseData);
+      await addExpense(expenseData);
       console.log('Expense submitted successfully:', expenseData);
       resetForm();
       onSuccess?.();
