@@ -5,7 +5,7 @@ import { ExpenseFormData } from '../types/expense';
 
 interface ExpenseState {
   error: string | null;
-  addExpense: (data: ExpenseFormData) => Promise<void>;
+  addExpense: (data: ExpenseFormData) => Promise<string | undefined>;
   deleteExpense: (id: string) => Promise<void>;
   setError: (error: string | null) => void;
 }
@@ -40,7 +40,7 @@ const useExpenseStore = create<ExpenseState>((set) => ({
       const result = await push(expensesRef, expenseData);
       
       console.log('Expense added successfully:', result.key);
-      return result.key;
+      return result.key || undefined;
 
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Failed to add expense';
