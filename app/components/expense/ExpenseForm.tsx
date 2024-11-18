@@ -21,12 +21,8 @@ export function ExpenseForm({ onSuccess }: ExpenseFormProps) {
   const calendarRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
-  const store = useExpenseStore();
-  
-  // Verify store initialization
-  useEffect(() => {
-    console.log('Store state:', store);
-  }, [store]);
+  const addExpense = useExpenseStore((state) => state.addExpense);
+  const storeError = useExpenseStore((state) => state.error);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
