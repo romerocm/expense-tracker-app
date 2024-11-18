@@ -10,7 +10,7 @@ interface ExpenseState {
   setError: (error: string | null) => void;
 }
 
-const useExpenseStore = create<ExpenseState>()((set) => ({
+const useExpenseStore = create<ExpenseState>((set) => ({
   error: null,
   
   setError: (error: string | null) => set({ error }),
