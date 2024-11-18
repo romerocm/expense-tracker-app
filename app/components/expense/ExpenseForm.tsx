@@ -21,8 +21,7 @@ export function ExpenseForm({ onSuccess }: ExpenseFormProps) {
   const calendarRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
-  const addExpense = useExpenseStore((state) => state.addExpense);
-  const storeError = useExpenseStore((state) => state.error);
+  const { addExpense, error: storeError } = useExpenseStore.getState();
 
   useEffect(() => {
     if (storeError) {
