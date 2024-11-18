@@ -1,10 +1,14 @@
 import { useState, useEffect } from 'react';
 import { ref, onValue, DataSnapshot } from 'firebase/database';
+
+interface FirebaseError extends Error {
+  code?: string;
+}
 import { db } from '../firebase';
 import { useAuth } from '../context/AuthContext';
 import { Expense } from '../types/expense';
 
-const handleDatabaseError = (error: Error): string => {
+const handleDatabaseError = (error: FirebaseError): string => {
   console.error('Database Error:', {
     code: error.code,
     message: error.message,
