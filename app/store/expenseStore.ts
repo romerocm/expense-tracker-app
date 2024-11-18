@@ -10,12 +10,13 @@ interface ExpenseState {
   setError: (error: string | null) => void;
 }
 
-const useExpenseStore = create<ExpenseState>()((set) => ({
+const useExpenseStore = create<ExpenseState>((set) => ({
   error: null,
   
   setError: (error: string | null) => set({ error }),
   
   addExpense: async (data: ExpenseFormData) => {
+    console.log('addExpense called with data:', data);
     try {
       set({ error: null });
       const user = auth.currentUser;

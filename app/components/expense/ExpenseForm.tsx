@@ -21,14 +21,12 @@ export function ExpenseForm({ onSuccess }: ExpenseFormProps) {
   const calendarRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
-  const addExpense = useExpenseStore((state) => state.addExpense);
-  const storeError = useExpenseStore((state) => state.error);
-
+  const store = useExpenseStore();
+  
+  // Verify store initialization
   useEffect(() => {
-    if (storeError) {
-      setFormError(storeError);
-    }
-  }, [storeError]);
+    console.log('Store state:', store);
+  }, [store]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -67,6 +65,11 @@ export function ExpenseForm({ onSuccess }: ExpenseFormProps) {
         throw new Error('Please enter a description');
       }
 
+      if (!store.addExpense) {
+        console.error('Store state when addExpense is undefined:', store);
+        throw new Error('Add expense function is not available');
+      }
+
       const expenseData: ExpenseFormData = {
         amount: parseFloat(amount),
         description: description.trim(),
@@ -74,11 +77,8 @@ export function ExpenseForm({ onSuccess }: ExpenseFormProps) {
         note: note.trim() || undefined,
       };
 
-      if (!addExpense) {
-        throw new Error('Add expense function is not available');
-      }
-      await addExpense(expenseData);
-      console.log('Expense added successfully', expenseData);
+      await store.addExpense(expenseData);
+      console.log('Expense submitted successfully:', expenseData);
       resetForm();
       onSuccess?.();
     } catch (err) {
