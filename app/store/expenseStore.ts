@@ -34,7 +34,8 @@ const useExpenseStore = create<ExpenseState>((set) => ({
       };
 
       await set(newExpenseRef, expenseData);
-      set({ error: null }); // Update Zustand state after Firebase success
+      // Update Zustand state after Firebase success, not using the Firebase reference
+      set((state) => ({ ...state, error: null }));
       console.log('Expense added successfully:', newExpenseRef.key);
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Failed to add expense';
