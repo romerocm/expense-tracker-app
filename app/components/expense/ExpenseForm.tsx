@@ -63,11 +63,6 @@ export function ExpenseForm({ onSuccess }: ExpenseFormProps) {
         throw new Error('Please enter a description');
       }
 
-      if (!addExpense) {
-        console.error('addExpense function is not available');
-        throw new Error('Add expense function is not available');
-      }
-
       const expenseData: ExpenseFormData = {
         amount: parseFloat(amount),
         description: description.trim(),
@@ -75,10 +70,15 @@ export function ExpenseForm({ onSuccess }: ExpenseFormProps) {
         note: note.trim() || undefined,
       };
 
-      await addExpense(expenseData);
-      console.log('Expense submitted successfully:', expenseData);
-      resetForm();
-      onSuccess?.();
+      try {
+        await addExpense(expenseData);
+        console.log('Expense submitted successfully:', expenseData);
+        resetForm();
+        onSuccess?.();
+      } catch (error) {
+        console.error('Error in addExpense:', error);
+        throw error;
+      }
     } catch (err) {
       console.error('Error adding expense:', err);
       setFormError(err instanceof Error ? err.message : 'Failed to add expense');
