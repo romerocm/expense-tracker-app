@@ -18,31 +18,34 @@ const useExpenseStore = create<ExpenseState>((set) => ({
   addExpense: async (data: ExpenseFormData) => {
     console.log('addExpense called with data:', data);
     try {
-      set({ error: null });
       const user = auth.currentUser;
       if (!user) {
         throw new Error('Must be logged in to add expenses');
       }
 
-      const expensesRef = ref(db, `users/${user.uid}/expenses`);
-      const newExpenseRef = push(expensesRef);
-      
+      // Reset any previous errors
+      set({ error: null });
+
+      // Create the expense data
       const expenseData = {
         ...data,
         createdAt: Date.now(),
         userId: user.uid,
       };
 
-      // First update the Zustand state
-      set((state) => ({ ...state, error: null }));
+      // Reference to user's expenses
+      const expensesRef = ref(db, `users/${user.uid}/expenses`);
+
+      // Push the new expense directly
+      const result = await push(expensesRef, expenseData);
       
-      // Then handle the Firebase operation
-      await set(newExpenseRef, expenseData);
-      console.log('Expense added successfully:', newExpenseRef.key);
+      console.log('Expense added successfully:', result.key);
+      return result.key;
+
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Failed to add expense';
       set({ error: message });
-      throw new Error(message);
+      throw error;
     }
   },
   
