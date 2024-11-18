@@ -21,7 +21,8 @@ export function ExpenseForm({ onSuccess }: ExpenseFormProps) {
   const calendarRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
-  const { addExpense, error: storeError } = useExpenseStore.getState();
+  const addExpense = useExpenseStore((state) => state.addExpense);
+  const storeError = useExpenseStore((state) => state.error);
 
   useEffect(() => {
     if (storeError) {
@@ -73,8 +74,11 @@ export function ExpenseForm({ onSuccess }: ExpenseFormProps) {
         note: note.trim() || undefined,
       };
 
+      if (!addExpense) {
+        throw new Error('Add expense function is not available');
+      }
       await addExpense(expenseData);
-      console.log('Expense added successfully');
+      console.log('Expense added successfully', expenseData);
       resetForm();
       onSuccess?.();
     } catch (err) {
